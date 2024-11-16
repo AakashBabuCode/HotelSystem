@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Cart</title>
+    {% load static %}
+    <style>
+        /* General Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background-image: url('/static/images/Food.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+            background-color: #f4f4f9;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        a {
+            text-decoration: none;
+            color: #333;
+        }
+
+        ul {
+            list-style: none;
+        }
+
+        /* Header */
+/* Header with Glassmorphism Effect */
+.header {
+    background-color: rgba(255, 255, 255, 0.1);  /* Semi-transparent white background */
+    color: #fff;
+    padding: 15px 0;
+    border-radius: 10px;  /* Optional: rounded corners for a smoother effect */
+    backdrop-filter: blur(10px);  /* Apply blur effect to background */
+    -webkit-backdrop-filter: blur(10px);  /* Safari support */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);  /* Subtle shadow for better contrast */
+}
+
+/* Container within the header */
+.header .container {
+    width: 90%;
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+/* Logo Style */
+.header .logo {
+    font-size: 24px;
+    font-weight: bold;
+    letter-spacing: 1px;  /* Optional: adds spacing to the text */
+}
+
+/* Navigation Styling */
+.header nav ul {
+    display: flex;
+    gap: 20px;
+}
+
+/* List items in the nav */
+.header nav ul li {
+    display: inline;
+}
+
+/* Links in the nav */
+.header nav ul li a {
+    color: #fff;
+    font-size: 16px;
+    padding: 10px 15px;
+    transition: background-color 0.3s, transform 0.3s;
+    border-radius: 5px;  /* Rounded corners for buttons */
+}
+
+/* Hover effect for links */
+.header nav ul li a:hover {
+    background-color: rgba(255, 255, 255, 0.2);  /* Lighter background on hover */
+    transform: scale(1.05);  /* Subtle scaling effect on hover */
+}
+
+/* Optional: Adding media queries for responsiveness */
+@media (max-width: 768px) {
+    .header .container {
+        flex-direction: column;  /* Stack items vertically on smaller screens */
+        align-items: flex-start;
+    }
+    
+    .header nav ul {
+        flex-direction: column;
+        gap: 10px;
+    }
+}
+
+
+        /* Cart Page */
+        .cart {
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .cart-items {
+            margin-bottom: 30px;
+        }
+
+        .cart-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 10px;
+        }
+
+        /* Adjust Image Size in Cart */
+        .cart-item-image {
+            width: 100px;
+            height: 100px;
+            object-fit: cover;
+            margin-right: 20px;
+            border-radius: 10px;
+        }
+
+        .cart-item-info h3 {
+            font-size: 18px;
+            margin-bottom: 5px;
+        }
+
+        .cart-item-info p {
+            font-size: 16px;
+            margin-bottom: 5px;
+        }
+
+        .cart-total {
+            text-align: right;
+            font-size: 18px;
+        }
+
+        .checkout-btn {
+            display: inline-block;
+            background-color: #ff6f61;
+            color: #fff;
+            padding: 15px 30px;
+            border-radius: 5px;
+            font-size: 18px;
+            text-transform: uppercase;
+            margin-top: 10px;
+        }
+
+        .checkout-btn:hover {
+            background-color: #e14c3c;
+        }
+
+        /* Footer */
+        footer {
+            background-color: #333;
+            color: #fff;
+            text-align: center;
+            padding: 20px 0;
+            margin-top: 50px;
+        }
+
+        footer p {
+            font-size: 14px;
+        }
+
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <h1 class="logo">Food Cart</h1>
+            <nav>
+                <ul>
+                    <li><a href="{% url 'home' %}">Home</a></li>
+                    <li><a href="{% url 'view_cart' %}">Your Cart</a></li>
+                    <li><a href="{% url 'logout' %}">Logout</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <section class="cart">
+            <h2>Your Cart</h2>
+            {% if cart %}
+            <div class="cart-items">
+                <ul>
+                    {% for item in cart_items %}
+                    <li class="cart-item">
+                        <img src="{% static 'images/rotti.jpg' %}" alt="{{ item.product.name }}" class="cart-item-image">
+                        <div class="cart-item-info">
+                            <h3>{{ item.product.name }}</h3>
+                            <p>Quantity: {{ item.quantity }}</p>
+                            <p>Price: ${{ item.product.price }}</p>
+                            <p>Total: ${{ item.total_price }}</p>  <!-- Display the pre-calculated total price -->
+                        </div>
+                    </li>
+                    {% endfor %}
+                </ul>
+            </div>
+            <div class="cart-total">
+                <p><strong>Total: ${{ cart.get_total }}</strong></p>
+                <a href="{% url 'logout' %}" class="checkout-btn">Checkout</a>
+            </div>
+            {% else %}
+            <p>Your cart is empty. <a href="{% url 'home' %}">Go back to shopping.</a></p>
+            {% endif %}
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2024 Food Cart. All Rights Reserved.</p>
+    </footer>
+
+</body>
+</html>
